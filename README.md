@@ -1,7 +1,5 @@
 <p align="center">
-  <img src="./docs/images/esv-lookup-screenshot.jpg" width="135" align="center">
-  <br>
-  <br>
+  <img src="./docs/images/esv-lookup-screenshot.jpg"  align="center">
 </p>
 
 #### Install dependencies
