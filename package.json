@@ -1,34 +1,16 @@
 {
-  "name": "electron-react-webpack-boilerplate",
-  "version": "1.7.0",
+  "name": "esv-lookup-app",
+  "productName": "ESV Lookup",
+  "version": "1.0.0",
   "description": "Minimal Electron, React, PostCSS and Webpack boilerplate to help you get started with building your next app.",
   "license": "MIT",
   "private": false,
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/alexdevero/electron-react-webpack-boilerplate.git"
-  },
   "homepage": "",
-  "bugs": {
-    "url": "https://github.com/alexdevero/electron-react-webpack-boilerplate.git/issues"
-  },
   "author": {
-    "name": "Alex Devero",
-    "email": "deveroalex@gmail.com",
-    "url": "https://github.com/alexdevero"
+    "name": "David Wosk",
+    "email": "davidwosk1@gmail.com",
+    "url": "https://github.com/basketbaseb"
   },
-  "keywords": [
-    "app",
-    "boilerplate",
-    "electron",
-    "open",
-    "open-source",
-    "postcss",
-    "react",
-    "reactjs",
-    "source",
-    "webpack"
-  ],
   "engines": {
     "node": ">=9.0.0",
     "npm": ">=5.0.0",
@@ -39,8 +21,8 @@
     "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
     "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
     "build": "webpack --config webpack.build.config.js --mode production --verbose",
-    "package": "npm run build",
-    "postpackage": "electron-packager ./ --out=./builds"
+    "package:win": "npm run build && electron-packager ./ esv-lookup-app --overwrite --asar=true --out=./builds --prune=true",
+    "package:mac": "npm run build && electron-packager ./ --overwrite --platform=darwin --arch=x64 --icon=src/assets/icons/mac/icon.icns --prune=true --out=builds"
   },
   "dependencies": {
     "@carbon/icons-react": "^10.4.1",
