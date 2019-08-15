@@ -11,18 +11,15 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader'
-        ],
+        test: /\.scss$/,
+        use:  [{ loader: 'style-loader' }, { loader: 'css-loader' }, { loader: 'sass-loader' }],
         include: defaultInclude
       },
       {
         test: /\.jsx?$/,
         use: [{ loader: 'babel-loader' }],
-        include: defaultInclude
+        include: defaultInclude,
+        // exclude: [path.join(__dirname, './node_modules')]
       },
       {
         test: /\.(jpe?g|png|gif)$/,
@@ -48,7 +45,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    new BabiliPlugin()
+    // new BabiliPlugin()
   ],
   stats: {
     colors: true,

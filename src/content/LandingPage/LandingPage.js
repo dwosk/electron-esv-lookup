@@ -7,6 +7,8 @@ import OverflowMenu from 'carbon-components-react/lib/components/OverflowMenu';
 import OverflowMenuItem from 'carbon-components-react/lib/components/OverflowMenuItem';
 import RadioButton from 'carbon-components-react/lib/components/RadioButton';
 import { getPassage, Settings } from '../../helpers';
+import autocomplete from 'autocompleter';
+import { BOOKS } from '../../helpers/books';
 
 let notificationQueue = [];
 class LandingPage extends Component {
@@ -20,12 +22,65 @@ class LandingPage extends Component {
   }
 
   componentDidMount() {
+    let recentlyAutoCompleted = false;
+
     document.addEventListener('keyup', (e) => {
       e.preventDefault();
       if (e.keyCode === 13) {
+        if (recentlyAutoCompleted) {
+          return;
+        }
+        
         if (document.getElementById('submitBtn')) {
           document.getElementById('submitBtn').click();
         }
+      }
+    });
+
+    const allowedChars = new RegExp(/^[a-zA-Z0-9\s]+$/);
+    function charsAllowed(value) {
+      return allowedChars.test(value);
+    };
+
+    autocomplete({
+      input: document.getElementById("reference"),
+      minLength: 1,
+      fetch: (text, callback) => {
+        if (this.state.apiType === 1) {
+          return;
+        }
+
+        var match = text.toLowerCase();
+        callback(BOOKS.filter(function(n) { return n.label.toLowerCase().indexOf(match) !== -1; }));
+      },
+      onSelect: function(item) {
+          // Set text box value based on selection
+          recentlyAutoCompleted = true;
+          /** Reset after 1 second */
+          setTimeout(() => {
+            recentlyAutoCompleted = false;
+          }, 1000);
+          var textBox = document.getElementById("reference");
+          textBox.value = item.value;
+          textBox.focus();
+      },
+      render: (item, value) => {
+        var itemElement = document.createElement("div");
+        if (charsAllowed(value)) {
+          var regex = new RegExp(value, 'gi');
+          var inner = item.label.replace(regex, function(match) { return "<strong>" + match + "</strong>" });
+          itemElement.innerHTML = inner;
+        } else {
+          itemElement.textContent = item.label;
+        }
+        return itemElement;
+      },
+       customize: (input, inputRect, container, maxHeight) => {
+          if (maxHeight < 100) {
+              container.style.top = "";
+              container.style.bottom = (window.innerHeight - inputRect.bottom + input.offsetHeight) + "px";
+              container.style.maxHeight = "200px";
+          }
       }
     });
   }

@@ -31,7 +31,8 @@ function createWindow() {
     show: false,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    title: 'ESV Lookup'
   })
 
   // and load the index.html of the app.
@@ -53,8 +54,7 @@ function createWindow() {
   }
 
   mainWindow.loadURL(indexPath)
-  mainWindow.setMenu(null);
-  mainWindow.setTitle('ESV Lookup');
+  // mainWindow.setMenu(null);
 
   // Don't show until we are ready and loaded
   mainWindow.once('ready-to-show', () => {
