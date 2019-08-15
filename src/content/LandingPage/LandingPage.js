@@ -30,7 +30,7 @@ class LandingPage extends Component {
         if (recentlyAutoCompleted) {
           return;
         }
-        
+
         if (document.getElementById('submitBtn')) {
           document.getElementById('submitBtn').click();
         }
@@ -126,9 +126,11 @@ class LandingPage extends Component {
         this.insertSearchResults(result, input);
       } else {
         this.insertHtml(result);
-        /** Add passage to clipboard */
-        clipboard.writeHTML(result);
-        this.sendNotification(input);
+        if (Settings.get('copy.auto')) {
+          /** Add passage to clipboard */
+          clipboard.writeHTML(result);
+          this.sendNotification(input);
+        }
       }
 
       this.setState({ submitting: false, success: true });

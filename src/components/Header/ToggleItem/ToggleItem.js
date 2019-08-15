@@ -5,7 +5,7 @@ import Settings from '../../../helpers/settings';
 const ToggleItem = (props) => {
   const setting = props.setting;
   const [enabled, toggle] = useState(
-    Settings.get(`api.${setting}`)
+    Settings.get(`${setting}`)
   );
 
   return (
@@ -16,7 +16,7 @@ const ToggleItem = (props) => {
       labelText={props.labelText}
       aria-label=""
       onToggle={() => {
-        Settings.set(`api.${setting}`, !enabled);
+        Settings.set(`${setting}`, !enabled);
         toggle(!enabled);
       }}
     />

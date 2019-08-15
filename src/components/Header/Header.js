@@ -55,11 +55,16 @@ const LookupHeader = () => {
         </HeaderGlobalAction>
       </HeaderGlobalBar>
       <HeaderPanel aria-label="Header Panel" expanded={rightPanel}>
-        <ToggleItem setting="includeHeadings" id="headings" labelText="Include headings" />
-        <ToggleItem setting="includeVerseNumbers" id="numbers" labelText="Include verse numbers" />
+        <span className="dividerLabel">Verses</span>
+        <SwitcherDivider className="divider"/>
+        <ToggleItem setting="api.includeHeadings" id="headings" labelText="Include headings" />
+        <ToggleItem setting="api.includeVerseNumbers" id="numbers" labelText="Include verse numbers" />
         {/** <ToggleItem id="audio" setting="includeAudio" labelText="Include audio" /> */}
-        <ToggleItem id="footnotes" setting="includeFootnotes" labelText="Include footnotes" />
-        <ToggleItem id="references" setting="includeReferences" labelText="Include reference" />
+        <ToggleItem id="footnotes" setting="api.includeFootnotes" labelText="Include footnotes" />
+        <ToggleItem id="references" setting="api.includeReferences" labelText="Include reference" />
+        <span className="dividerLabel">Copy</span>
+        <SwitcherDivider className="divider"/>
+        <ToggleItem id="autoCopy" setting="copy.auto" labelText="Auto add to clipboard" />
       </HeaderPanel>
       <HeaderPanel aria-label="Switcher Panel" expanded={switcher}>
         <Switcher role="menu" aria-label="Switcher Container">

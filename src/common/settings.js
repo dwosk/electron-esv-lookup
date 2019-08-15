@@ -7,6 +7,9 @@ const Settings = new Store({
       includeAudio: false,
       includeVerseNumbers: true,
       includeHeadings: true
+    },
+    copy: {
+      auto: true
     }
   }
 });
