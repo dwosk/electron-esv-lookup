@@ -32,7 +32,8 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: true
     },
-    title: 'ESV Lookup'
+    title: 'ESV Lookup',
+    icon: path.join(__dirname, 'src', 'assets', 'icons', 'win',  'icon.ico')
   })
 
   // and load the index.html of the app.
