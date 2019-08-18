@@ -5,11 +5,13 @@ import Header from './components/Header';
 import { Route, Switch } from 'react-router-dom';
 import LandingPage from './content/LandingPage';
 import RecentPage from './content/RecentPage';
+import TitleBar from './components/TitleBar';
 
 class App extends Component {
   render() {
     return (
       <>
+        <TitleBar />
         <Header />
         <Content>
           <Switch>

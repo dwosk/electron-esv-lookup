@@ -33,21 +33,21 @@ const LookupHeader = () => {
   return (
     <Header aria-label="Carbon Tutorial">
       <SkipToContent />
-      <HeaderName element={Link} to="/" prefix="ESV">
+      <HeaderName style={{WebkitAppRegion: "no-drag"}} element={Link} to="/" prefix="ESV">
         Lookup
       </HeaderName>
       <HeaderNavigation aria-label="Carbon Tutorial">
         <HeaderMenuItem element={Link} to="/recent">Recent</HeaderMenuItem>
       </HeaderNavigation>
-      <HeaderGlobalBar>
+      <HeaderGlobalBar className="headerButtons">
         <NotificationAction />
-        <HeaderGlobalAction aria-label="Settings" isActive={rightPanel}>
+        <HeaderGlobalAction style={{WebkitAppRegion: "no-drag"}} aria-label="Settings" isActive={rightPanel}>
           <Settings20 onClick={() => {
             toggleSwitcher(false);
             toggleRightPanel(!rightPanel);
           }}/>
         </HeaderGlobalAction>
-        <HeaderGlobalAction aria-label="App Switcher" isActive={switcher}>
+        <HeaderGlobalAction style={{WebkitAppRegion: "no-drag"}} aria-label="App Switcher" isActive={switcher}>
           <AppSwitcher20 onClick={() => {
             toggleRightPanel(false);
             toggleSwitcher(!switcher);

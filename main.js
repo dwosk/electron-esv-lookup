@@ -1,7 +1,7 @@
 'use strict'
 
 // Import parts of electron to use
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -26,12 +26,13 @@ if (process.platform === 'win32') {
 function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
+    width: 830,
+    height: 700,
     show: false,
     webPreferences: {
       nodeIntegration: true
     },
+    frame: false,
     title: 'ESV Lookup',
     icon: path.join(__dirname, 'src', 'assets', 'icons', 'win',  'icon.ico')
   })
@@ -96,4 +97,8 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+ipcMain.on('app:quit', () => {
+  app.quit();
 })

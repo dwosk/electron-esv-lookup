@@ -16,6 +16,7 @@ const NotificationAction = (props) => {
   const notification = enabled ? <Notification20 /> : <NotificationOff20 />;
   return (
     <HeaderGlobalAction
+      style={{WebkitAppRegion: "no-drag"}}
       aria-label="Notifications"
       onClick={
         () => {
