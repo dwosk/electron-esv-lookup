@@ -8,6 +8,7 @@ const url = require('url')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
+let originalWindowBounds
 
 // Keep a reference for dev mode
 let dev = false
@@ -101,4 +102,20 @@ app.on('activate', () => {
 
 ipcMain.on('app:quit', () => {
   app.quit();
+})
+
+ipcMain.on('app:maximize', () => {
+  // Keep track of original window size and position
+  originalWindowBounds = mainWindow.getBounds();
+  mainWindow.maximize();
+  mainWindow.setResizable(false);
+})
+
+ipcMain.on('app:minimize', () => {
+  mainWindow.minimize();
+})
+
+ipcMain.on('app:restore', () => {
+  mainWindow.setResizable(true);
+  mainWindow.setBounds(originalWindowBounds);
 })
