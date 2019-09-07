@@ -1,5 +1,4 @@
 {
-  "name": "esv-lookup-app",
   "productName": "ESV Lookup",
   "version": "1.0.0",
   "description": "Minimal Electron, React, PostCSS and Webpack boilerplate to help you get started with building your next app.",
@@ -21,7 +20,7 @@
     "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
     "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
     "build": "webpack --config webpack.build.config.js --mode production --verbose",
-    "package:win": "npm run build && electron-packager ./ esv-lookup-app --overwrite --asar=true --out=./builds --prune=true",
+    "package:win": "npm run build && electron-packager ./ \"ESV Lookup\" --overwrite --asar=true --out=./builds --prune=true",
     "package:mac": "npm run build && electron-packager ./ --overwrite --platform=darwin --arch=x64 --icon=src/assets/icons/mac/icon.icns --prune=true --out=builds"
   },
   "dependencies": {
