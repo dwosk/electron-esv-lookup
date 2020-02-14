@@ -177,12 +177,12 @@ class LandingPage extends Component {
         <div id="inputRow">
         <TextInput id="reference" labelText="Reference" placeholder="Ex: John 1:12,15-17"/>
         <OverflowMenu>
-          <h1 id="overflowTitle">Type</h1>
+          <h1 id="overflowTitle">Lookup Type</h1>
           <RadioButton
             value="html"
             id="html-option"
             name="toolbar-radio"
-            labelText="HTML"
+            labelText="Reference"
             checked={apiType === 0}
             onClick={() => {
               Settings.set('api.endpoint', 0);
