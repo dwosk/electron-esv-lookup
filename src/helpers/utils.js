@@ -108,6 +108,11 @@ const request = (options) => {
       }).on('error', reject);
     });
 
+    // If no response after 8 seconds just resolve
+    setTimeout(() => {
+      resolve();
+    }, 8000);
+
     req.end();
   });
 }
