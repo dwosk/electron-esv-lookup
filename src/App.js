@@ -13,7 +13,7 @@ class App extends Component {
       <>
         <TitleBar />
         <Header />
-        <Content>
+        <Content id="main-content">
           <Switch>
             <Route exact path="/" component={LandingPage} />
             <Route path="/recent" component={RecentPage} />

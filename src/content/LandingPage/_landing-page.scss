@@ -13,6 +13,13 @@
   width: 7em;
 }
 
+.bx--content {
+  // margin-top: 45px;
+  padding-bottom: 140px;
+  height: 100vh;
+  overflow-y: auto;
+}
+
 #result {
   margin-top: 1em;
   line-height: 1.5em;
