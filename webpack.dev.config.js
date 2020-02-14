@@ -48,7 +48,7 @@ module.exports = {
     },
     before() {
       spawn(
-        'electron',
+        'npx electron',
         ['.'],
         { shell: true, env: process.env, stdio: 'inherit' }
       )
