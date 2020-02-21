@@ -2,8 +2,18 @@
 
 // Import parts of electron to use
 const { app, BrowserWindow, ipcMain } = require('electron')
+const { autoUpdater } = require('electron-updater')
+const log = require('electron-log')
 const path = require('path')
 const url = require('url')
+
+class AppUpdater {
+  constructor() {
+    log.transports.file.level = 'info';
+    autoUpdater.logger = log;
+    autoUpdater.checkForUpdates();
+  }
+}
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -76,6 +86,8 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  new AppUpdater();
 }
 
 // This method will be called when Electron has finished

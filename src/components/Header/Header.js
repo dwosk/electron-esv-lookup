@@ -42,17 +42,17 @@ const LookupHeader = () => {
       </HeaderNavigation>
       <HeaderGlobalBar className="headerButtons">
         <NotificationAction />
-        <HeaderGlobalAction style={{WebkitAppRegion: "no-drag"}} aria-label="Settings" isActive={rightPanel}>
-          <Settings20 onClick={() => {
-            toggleSwitcher(false);
-            toggleRightPanel(!rightPanel);
-          }}/>
+        <HeaderGlobalAction style={{WebkitAppRegion: "no-drag"}} aria-label="Settings" isActive={rightPanel}  onClick={() => {
+          toggleSwitcher(false);
+          toggleRightPanel(!rightPanel);
+        }}>
+          <Settings20 />
         </HeaderGlobalAction>
-        <HeaderGlobalAction style={{WebkitAppRegion: "no-drag"}} aria-label="App Switcher" isActive={switcher}>
-          <AppSwitcher20 onClick={() => {
-            toggleRightPanel(false);
-            toggleSwitcher(!switcher);
-          }}/>
+        <HeaderGlobalAction style={{WebkitAppRegion: "no-drag"}} aria-label="App Switcher" isActive={switcher} onClick={() => {
+          toggleRightPanel(false);
+          toggleSwitcher(!switcher);
+        }}>
+          <AppSwitcher20 />
         </HeaderGlobalAction>
       </HeaderGlobalBar>
       <HeaderPanel aria-label="Header Panel" expanded={rightPanel}>
