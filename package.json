@@ -1,7 +1,7 @@
 {
   "name": "esv-lookup",
   "productName": "ESV Lookup",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "ESV Lookup application for quickly looking up and copying Bible text.",
   "license": "MIT",
   "private": false,
@@ -21,13 +21,30 @@
     "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
     "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
     "build": "webpack --config webpack.build.config.js --mode production --verbose",
-    "package:win": "npm run build && electron-packager ./ \"ESV Lookup\" --overwrite --asar=true --out=./builds --prune=true",
-    "package:mac": "npm run build && electron-packager ./ --overwrite --platform=darwin --arch=x64 --icon=src/assets/icons/mac/icon.icns --prune=true --out=builds",
+    "package-mac": "npm run build && electron-builder build --mac --x64",
     "package-win": "npm run build && electron-builder build --win --x64",
     "package-ci": "npm run build && electron-builder --publish always"
   },
   "build": {
     "productName": "ESV Lookup",
+    "appId": "com.basketbaseb.ESVLookup",
+    "mac": {
+      "category": "Reference"
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
     "win": {
       "target": [
         "nsis",
