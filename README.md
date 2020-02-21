@@ -1,34 +1,22 @@
+## ESV Lookup ##
+#### Auto-formats and copies any ESV reference you lookup! :100: :boom: ####
+
+### Features ###
+* Quick lookup of any reference :zap:
+* Search the entire ESV for any word or phrase :mag_right:
+* Easily format every verse you lookup. Don't like those headers? No problem! :raised_hands:
+* Auto-updates so you always get the latest and greatest :airplane:
+
 <p align="center">
   <img src="./docs/images/esv-lookup-screenshot.jpg"  align="center">
 </p>
 
-#### Install dependencies
+### Downloads ###
+<a href="https://github.com/basketbaseb/electron-esv-lookup/releases/latest">Let's go!</a>
+
+#### Development
 
 ```
 npm install
-```
-
-### Usage
-
-#### Run the app
-
-```
 npm run start
-```
-
-#### Build the app (automatic)
-
-```
-npm run package
-```
-
-#### Build the app (manual)
-
-```
-npm run build
-```
-
-#### Test the app (after `npm run build`)
-```
-npm run prod
 ```
