@@ -8,7 +8,7 @@
 * Auto-updates so you always get the latest and greatest :airplane:
 
 <p align="center">
-  <img src="./docs/images/esv-lookup-screenshot.jpg"  align="center">
+  <img src="./docs/images/esv-lookup-demo.jpg" alt="esv lookup demo" align="center">
 </p>
 
 ### Downloads ###
