@@ -60,12 +60,9 @@ const query = async (input) => {
     query = querystring.stringify(query);
     console.log('query: ', query)
     const options = {
-      host: 'api.esv.org',
-      path: `/v3/passage/${endpoint}/?` + query,
-      method: 'GET',
-      headers: {
-        'Authorization': 'Token 1733db1282cb748137fbc7a6f7d57eeb5eba0e1f'
-      }
+      host: 'esv-lookup-gateway.now.sh',
+      path: `/api/passage/${endpoint}?` + query,
+      method: 'GET'
     };
 
     let response = await request(options);
