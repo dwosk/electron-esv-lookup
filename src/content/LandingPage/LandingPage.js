@@ -147,8 +147,8 @@ class LandingPage extends Component {
 
     /** Only show one notification at a time */
     if (notificationQueue.length === 0) {
-      let myNotification = new Notification('Success!', {
-        body: `Copied to clipboard: ${body}`,
+      let myNotification = new Notification('Ready to Go!', {
+        body: `Copied: ${body}`,
         silent: true
       })
       notificationQueue.push(myNotification);
