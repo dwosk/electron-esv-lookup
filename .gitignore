@@ -2,6 +2,7 @@
 ##########################
 builds/
 release/
+.env
 
 # Development folders and files #
 #################################
