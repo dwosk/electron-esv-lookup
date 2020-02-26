@@ -6,6 +6,7 @@ const { autoUpdater } = require('electron-updater')
 const log = require('electron-log')
 const path = require('path')
 const url = require('url')
+const MenuBuilder = require('./menu')
 
 class AppUpdater {
   constructor() {
@@ -54,14 +55,14 @@ function createWindow() {
   if (dev && process.argv.indexOf('--noDevServer') === -1) {
     indexPath = url.format({
       protocol: 'http:',
-      host: 'localhost:8080',
+      host: 'localhost:8090',
       pathname: 'index.html',
       slashes: true
     })
   } else {
     indexPath = url.format({
       protocol: 'file:',
-      pathname: path.join(__dirname, 'dist', 'index.html'),
+      pathname: path.join(__dirname, '..', 'dist', 'index.html'),
       slashes: true
     })
   }
@@ -86,6 +87,9 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  const menuBuilder = new MenuBuilder(mainWindow);
+  menuBuilder.buildMenu();
 
   new AppUpdater();
 }
