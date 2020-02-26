@@ -17,9 +17,9 @@
     "yarn": ">=1.0.0"
   },
   "scripts": {
-    "prod": "webpack --mode production --config config/webpack.build.config.js && electron --noDevServer .",
-    "start": "webpack-dev-server --hot --host 0.0.0.0 --config=config/webpack.dev.config.js --mode development",
-    "build": "webpack --config config/webpack.build.config.js --mode production --verbose",
+    "prod": "webpack --mode production --config config/webpack.config.renderer.prod.js && electron --noDevServer .",
+    "start": "webpack-dev-server --hot --host 0.0.0.0 --config=config/webpack.config.renderer.dev.js --mode development",
+    "build": "webpack --config config/webpack.config.renderer.prod.js --mode production --verbose",
     "package-mac": "npm run build && electron-builder build --mac --x64",
     "package-win": "npm run build && electron-builder build --win --x64",
     "package-ci": "npm run build && electron-builder --publish always"
