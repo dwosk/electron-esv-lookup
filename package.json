@@ -18,12 +18,15 @@
   },
   "main": "src/main.js",
   "scripts": {
-    "start": "npm run renderer && electron --noDevServer ./src/main.js",
-    "start-dev": "cross-env NODE_ENV=development webpack-dev-server --hot --host 0.0.0.0 --config=config/webpack.config.renderer.dev.js --mode development",
-    "renderer": "cross-env NODE_ENV=production webpack --config config/webpack.config.renderer.prod.js --mode production --verbose",
-    "package-mac": "npm run renderer && electron-builder build --mac --x64",
-    "package-win": "npm run renderer && electron-builder build --win --x64",
-    "package-ci": "npm run renderer && electron-builder --publish always"
+    "todo-build-main": "cross-env NODE_ENV=production webpack --config config/webpack.config.main.prod.js",
+    "build-renderer": "cross-env NODE_ENV=production webpack --config config/webpack.config.renderer.prod.js --mode production --verbose",
+    "todo-start": "cross-env NODE_ENV=production electron ./src/main.prod.js",
+    "todo-start-dev": "cross-env NODE_ENV=development electron ./src/main.js",
+    "package-ci": "npm run build-renderer && electron-builder --publish always",
+    "package-mac": "npm run build-renderer && electron-builder build --mac --x64",
+    "package-win": "npm run build-renderer && electron-builder build --win --x64",
+    "start": "npm run build-renderer && electron --noDevServer ./src/main.js",
+    "start-dev": "cross-env NODE_ENV=development webpack-dev-server --hot --host 0.0.0.0 --config=config/webpack.config.renderer.dev.js --mode development"
   },
   "build": {
     "productName": "ESV Lookup",
