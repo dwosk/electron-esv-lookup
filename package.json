@@ -16,14 +16,17 @@
     "npm": ">=5.0.0",
     "yarn": ">=1.0.0"
   },
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
-    "prod": "webpack --mode production --config webpack.build.config.js && electron --noDevServer .",
-    "start": "webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
-    "build": "webpack --config webpack.build.config.js --mode production --verbose",
-    "package-mac": "npm run build && electron-builder build --mac --x64",
-    "package-win": "npm run build && electron-builder build --win --x64",
-    "package-ci": "npm run build && electron-builder --publish always"
+    "todo-build-main": "cross-env NODE_ENV=production webpack --config config/webpack.config.main.prod.js",
+    "build-renderer": "cross-env NODE_ENV=production webpack --config config/webpack.config.renderer.prod.js --mode production --verbose",
+    "todo-start": "cross-env NODE_ENV=production electron ./src/main.prod.js",
+    "todo-start-dev": "cross-env NODE_ENV=development electron ./src/main.js",
+    "package-ci": "npm run build-renderer && electron-builder --publish always",
+    "package-mac": "npm run build-renderer && electron-builder build --mac --x64",
+    "package-win": "npm run build-renderer && electron-builder build --win --x64",
+    "start": "npm run build-renderer && electron --noDevServer ./src/main.js",
+    "start-dev": "cross-env NODE_ENV=development webpack-dev-server --hot --host 0.0.0.0 --config=config/webpack.config.renderer.dev.js --mode development"
   },
   "build": {
     "productName": "ESV Lookup",
@@ -89,6 +92,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
     "babili-webpack-plugin": "^0.1.2",
+    "cross-env": "^7.0.0",
     "css-loader": "^3.1.0",
     "electron": "^6.0.0",
     "electron-builder": "^22.3.2",
