@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Header,
@@ -20,6 +20,24 @@ import Settings20 from '@carbon/icons-react/lib/settings/20';
 import AppSwitcher20 from '@carbon/icons-react/lib/app-switcher/20';
 import { version } from '../../../package.json';
 
+const useOutsideAlerter = (ref, callback) => {
+  // Alert if clicked on outside of element
+    const handleClickOutside = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        callback(false);
+      }
+    }
+
+    useEffect(() => {
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    });
+}
+
 const LookupHeader = () => {
   const [rightPanel, toggleRightPanel] = useState(
     false
@@ -31,7 +49,15 @@ const LookupHeader = () => {
     false
   );
 
+  const toggleCallback = () => {
+    toggleRightPanel(false);
+    toggleSwitcher(false);
+  };
+  const wrapperRef = useRef(null);
+  useOutsideAlerter(wrapperRef, toggleCallback);
+
   return (
+    <div ref={wrapperRef}>
     <Header aria-label="Carbon Tutorial">
       <SkipToContent />
       <HeaderName style={{WebkitAppRegion: "no-drag"}} element={Link} to="/" prefix="ESV">
@@ -82,6 +108,7 @@ const LookupHeader = () => {
         <article style={{paddingTop: "1em"}}>Scripture quotations are from the ESV® Bible (The Holy Bible, English Standard Version®), copyright © 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved. You may not copy or download more than 500 consecutive verses of the ESV Bible or more than one half of any book of the ESV Bible.</article>
       </Modal>
     </Header>
+</div>
   )
 }
 
