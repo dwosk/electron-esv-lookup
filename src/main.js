@@ -109,11 +109,18 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (mainWindow === null) {
     createWindow()
+  } else {
+    mainWindow.show();
   }
 })
 
 ipcMain.on('app:quit', () => {
-  app.quit();
+  if (process.platform !== 'darwin') {
+    app.quit();
+  } else {
+    // On macOS just hide the main window
+    mainWindow.hide();
+  }
 })
 
 ipcMain.on('app:maximize', () => {
