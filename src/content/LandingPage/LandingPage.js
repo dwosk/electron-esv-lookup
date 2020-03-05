@@ -14,6 +14,7 @@ import autocomplete from 'autocompleter';
 import { BOOKS } from '../../helpers/books';
 
 const shell = remote.shell;
+let currentSuccessfulInput;
 
 let notificationQueue = [];
 class LandingPage extends Component {
@@ -95,7 +96,7 @@ class LandingPage extends Component {
     document.getElementById('reference').value = '';
   }
 
-  getInput() {
+  getRawInput() {
     return document.getElementById('reference').value;
   }
 
@@ -134,27 +135,24 @@ class LandingPage extends Component {
   }
 
   async handleMp3() {
-    let input = await this.getInput();
-    if (!input) {
-      return;
-    }
+    if (currentSuccessfulInput) {
+      this.setState({ submittingMp3: true });
+      let result = await getPassage(currentSuccessfulInput, { mp3: true });
+      console.log('mp3 downloaded:', result);
+      if (result && result.path) {
+        NotificationManager.create('MP3 ready 🎉', result.path, (event) => {
+          shell.showItemInFolder(result.path);
+        });
+      } else {
+        NotificationManager.create('MP3 failed to download 😢', 'File size might be too big.');
+      }
 
-    this.setState({ submittingMp3: true });
-    let result = await getPassage(input, { mp3: true });
-    console.log('mp3 downloaded:', result);
-    if (result && result.path) {
-      NotificationManager.create('MP3 ready 🎉', result.path, (event) => {
-        shell.showItemInFolder(result.path);
-      });
-    } else {
-      NotificationManager.create('MP3 failed to download 😢', 'File size might be too big.');
+      this.setState({ submittingMp3: false});
     }
-
-    this.setState({ submittingMp3: false});
   }
 
   async handleSubmit() {
-    let input = await this.getInput();
+    let input = await this.getRawInput();
     if (!input) {
       return;
     }
@@ -166,6 +164,7 @@ class LandingPage extends Component {
     // todo: parse first and put some logic in component
     let result = await getPassage(input);
     if (result) {
+      currentSuccessfulInput = input;
       /** Search API returns array and is not HTML */
       if (result instanceof Array) {
         this.insertSearchResults(result, input);
