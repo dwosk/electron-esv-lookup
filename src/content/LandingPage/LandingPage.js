@@ -6,7 +6,7 @@ import InlineLoading from 'carbon-components-react/lib/components/InlineLoading'
 import OverflowMenu from 'carbon-components-react/lib/components/OverflowMenu';
 import OverflowMenuItem from 'carbon-components-react/lib/components/OverflowMenuItem';
 import RadioButton from 'carbon-components-react/lib/components/RadioButton';
-import { getPassage, Settings } from '../../helpers';
+import { getPassage, NotificationManager, Settings } from '../../helpers';
 import autocomplete from 'autocompleter';
 import { BOOKS } from '../../helpers/books';
 
@@ -129,7 +129,7 @@ class LandingPage extends Component {
         if (Settings.get('copy.auto')) {
           /** Add passage to clipboard */
           clipboard.writeHTML(result);
-          this.sendNotification(input);
+          NotificationManager.create('Ready to Go!', `Copied ${input}`)
         }
       }
 
@@ -138,31 +138,6 @@ class LandingPage extends Component {
 
     /** Reset state after an additional 1.5 seconds  */
     setTimeout(() => this.setState({ success: false, submitting: false }), 1500);
-  }
-
-  sendNotification(body) {
-    if (!Settings.get('notifications.enabled')) {
-      return;
-    }
-
-    /** Only show one notification at a time */
-    if (notificationQueue.length === 0) {
-      let myNotification = new Notification('Ready to Go!', {
-        body: `Copied: ${body}`,
-        silent: true
-      })
-      notificationQueue.push(myNotification);
-
-      /** Dismiss notification after 3s */
-      /** Windows - app must be pinned to Start */
-      new Promise(function(resolve) {
-        setTimeout(() => {
-          myNotification.close()
-          notificationQueue.pop();
-          resolve()
-        }, 4000);
-      });
-    }
   }
 
   render() {
