@@ -168,9 +168,15 @@ class LandingPage extends Component {
     let resultButtons;
     if (resultEl && resultEl.innerHTML !== "") {
       resultButtons = <>
-                        <Popup20 className="verseButton"/>
-                        <Mp320 className="verseButton"/>
-                        <Delete16 className="verseButton"/>
+                        <div className="verseButtonContainer">
+                          <Popup20 className="verseButton"/>
+                        </div>
+                        <div className="verseButtonContainer">
+                          <Mp320 className="verseButton"/>
+                        </div>
+                        <div className="verseButtonContainer">
+                          <Delete16 className="verseButton delete"/>
+                        </div>
                       </>
     }
 

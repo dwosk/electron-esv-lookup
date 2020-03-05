@@ -86,6 +86,29 @@
 }
 
 .verseButton {
+  height: 22px;
+  width: 22px;
+}
+
+.verseButton:active {
+  padding: 1px;
+}
+
+/* Make delete icon slightly smaller */
+.delete {
+  width: 20px;
+  height: 20px;
+}
+
+.verseButtonContainer {
+  display: inline-block;
   margin-top: 25px;
   margin-right: 20px;
+  /* Make border transparent before hover. Helps with positioning. */
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.verseButtonContainer:hover {
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  border-radius: 2px;
 }
