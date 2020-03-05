@@ -6,6 +6,7 @@
 * Search the entire ESV for any word or phrase :mag_right:
 * Easily format every verse you lookup. Don't like those headers? No problem! :raised_hands:
 * Auto-updates so you always get the latest and greatest :airplane:
+* Download verses to mp3! :headphones:
 
 <p align="center">
   <img src="./docs/images/esv-lookup-demo.gif" alt="esv lookup demo" align="center">
