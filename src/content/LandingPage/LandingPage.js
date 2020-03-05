@@ -6,6 +6,9 @@ import InlineLoading from 'carbon-components-react/lib/components/InlineLoading'
 import OverflowMenu from 'carbon-components-react/lib/components/OverflowMenu';
 import OverflowMenuItem from 'carbon-components-react/lib/components/OverflowMenuItem';
 import RadioButton from 'carbon-components-react/lib/components/RadioButton';
+import Mp320 from '@carbon/icons-react/lib/MP3/20';
+import Delete16 from '@carbon/icons-react/lib/delete/16';
+import Popup20 from '@carbon/icons-react/lib/popup/20';
 import { getPassage, NotificationManager, Settings } from '../../helpers';
 import autocomplete from 'autocompleter';
 import { BOOKS } from '../../helpers/books';
@@ -94,12 +97,14 @@ class LandingPage extends Component {
   }
 
   insertHtml(html) {
-    let passageEl = document.getElementById('result');
+    this.clearResult();
+    let passageEl = document.getElementById('htmlResult');
     passageEl.innerHTML = html;
   }
 
   insertSearchResults(resultsArr, input) {
-    let passageEl = document.getElementById('result');
+    this.clearResult();
+    let passageEl = document.getElementById('searchResult');
     passageEl.innerHTML = '';
     resultsArr.forEach((reference) => {
       let referenceNode = `<h3>${reference.reference}</h3>`;
@@ -107,6 +112,18 @@ class LandingPage extends Component {
       let contentNode = `<div style="padding-bottom: 1em">${markUpContent}</div>`
       passageEl.innerHTML += referenceNode + contentNode;
     })
+  }
+
+  clearResult() {
+    let htmlEl = document.getElementById('htmlResult');
+    if (htmlEl) {
+      htmlEl.innerHTML = '';
+    }
+
+    let searchEl = document.getElementById('searchResult');
+    if (searchEl) {
+      searchEl.innerHTML = '';
+    }
   }
 
   async handleSubmit() {
@@ -119,6 +136,7 @@ class LandingPage extends Component {
       submitting: true
     });
 
+    // todo: parse first and put some logic in component
     let result = await getPassage(input);
     if (result) {
       /** Search API returns array and is not HTML */
@@ -145,6 +163,15 @@ class LandingPage extends Component {
     const handleSubmit = this.handleSubmit.bind(this);
     let props = {
       [Settings.get('api.endpoint') === 0 ? 'checked' : 'foo']: true,
+    }
+    let resultEl = document.getElementById('htmlResult');
+    let resultButtons;
+    if (resultEl && resultEl.innerHTML !== "") {
+      resultButtons = <>
+                        <Popup20 className="verseButton"/>
+                        <Mp320 className="verseButton"/>
+                        <Delete16 className="verseButton"/>
+                      </>
     }
 
     return (
@@ -190,7 +217,9 @@ class LandingPage extends Component {
           <Button id="submitBtn" size="small" onClick={handleSubmit}>Enter</Button>
         )}
         </div>
-        <article id="result"></article>
+        {resultButtons}
+        <article id="htmlResult" class="result"></article>
+        <article id="searchResult" class="result"></article>
       </>
     );
   }

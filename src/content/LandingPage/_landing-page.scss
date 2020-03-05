@@ -20,16 +20,16 @@
   overflow-y: auto;
 }
 
-#result {
-  margin-top: 1em;
+.result {
+  margin-top: 0.9em;
   line-height: 1.5em;
 }
 
-#result h2 {
+.result h2 {
   font-size: 1.4em;
 }
 
-#result h3 {
+.result h3 {
   font-size: 1.2em;
 }
 
@@ -83,4 +83,9 @@
     background: #0062ff;
     color: white;
     cursor: pointer;
+}
+
+.verseButton {
+  margin-top: 25px;
+  margin-right: 20px;
 }
