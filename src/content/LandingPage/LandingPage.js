@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { clipboard } from 'electron';
+import { clipboard, remote } from 'electron';
 import TextInput from 'carbon-components-react/lib/components/TextInput';
 import Button from 'carbon-components-react/lib/components/Button';
 import InlineLoading from 'carbon-components-react/lib/components/InlineLoading';
@@ -7,11 +7,13 @@ import OverflowMenu from 'carbon-components-react/lib/components/OverflowMenu';
 import OverflowMenuItem from 'carbon-components-react/lib/components/OverflowMenuItem';
 import RadioButton from 'carbon-components-react/lib/components/RadioButton';
 import Mp320 from '@carbon/icons-react/lib/MP3/20';
-import Delete16 from '@carbon/icons-react/lib/delete/16';
-import Popup20 from '@carbon/icons-react/lib/popup/20';
+// import Delete16 from '@carbon/icons-react/lib/delete/16';
+// import Popup20 from '@carbon/icons-react/lib/popup/20';
 import { getPassage, NotificationManager, Settings } from '../../helpers';
 import autocomplete from 'autocompleter';
 import { BOOKS } from '../../helpers/books';
+
+const shell = remote.shell;
 
 let notificationQueue = [];
 class LandingPage extends Component {
@@ -19,6 +21,7 @@ class LandingPage extends Component {
     super();
     this.state = {
       submitting: false,
+      submittingMp3: false,
       success: false,
       apiType: Settings.get('api.endpoint')
     };
@@ -126,6 +129,30 @@ class LandingPage extends Component {
     }
   }
 
+  handleDeleteButton() {
+    this.clearResult();
+  }
+
+  async handleMp3() {
+    let input = await this.getInput();
+    if (!input) {
+      return;
+    }
+
+    this.setState({ submittingMp3: true });
+    let result = await getPassage(input, { mp3: true });
+    console.log('mp3 downloaded:', result);
+    if (result && result.path) {
+      NotificationManager.create('MP3 ready 🎉', result.path, (event) => {
+        shell.showItemInFolder(result.path);
+      });
+    } else {
+      NotificationManager.create('MP3 failed to download 😢', 'File size might be too big.');
+    }
+
+    this.setState({ submittingMp3: false});
+  }
+
   async handleSubmit() {
     let input = await this.getInput();
     if (!input) {
@@ -159,7 +186,7 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { submitting, success, apiType } = this.state;
+    const { submitting, success, apiType, submittingMp3 } = this.state;
     const handleSubmit = this.handleSubmit.bind(this);
     let props = {
       [Settings.get('api.endpoint') === 0 ? 'checked' : 'foo']: true,
@@ -167,15 +194,15 @@ class LandingPage extends Component {
     let resultEl = document.getElementById('htmlResult');
     let resultButtons;
     if (resultEl && resultEl.innerHTML !== "") {
+      // <div className="verseButtonContainer">
+      //   <Popup20 className="verseButton"/>
+      // </div>
+      // <div className="verseButtonContainer" onClick={() => this.handleDeleteButton()}>
+      //   <Delete16 className="verseButton delete"/>
+      // </div>
       resultButtons = <>
-                        <div className="verseButtonContainer">
-                          <Popup20 className="verseButton"/>
-                        </div>
-                        <div className="verseButtonContainer">
+                        <div className="verseButtonContainer" onClick={() => {this.handleMp3()}}>
                           <Mp320 className="verseButton"/>
-                        </div>
-                        <div className="verseButtonContainer">
-                          <Delete16 className="verseButton delete"/>
                         </div>
                       </>
     }
@@ -223,9 +250,14 @@ class LandingPage extends Component {
           <Button id="submitBtn" size="small" onClick={handleSubmit}>Enter</Button>
         )}
         </div>
-        {resultButtons}
-        <article id="htmlResult" class="result"></article>
-        <article id="searchResult" class="result"></article>
+        {/* {resultButtons} */}
+        { submittingMp3 ? (
+          <InlineLoading className='resultButtonsLoading'/>
+        ) : (
+          resultButtons
+        )}
+        <article id="htmlResult" className="result"></article>
+        <article id="searchResult" classNamet="result"></article>
       </>
     );
   }

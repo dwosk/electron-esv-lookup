@@ -1,6 +1,6 @@
 import Settings from './settings';
 
-const TIMEOUT = 4000;
+const TIMEOUT = 3000;
 
 const NotificationManager = class {
   constructor() {
@@ -8,12 +8,16 @@ const NotificationManager = class {
     this.notification = null;
   }
 
-  create(title, body) {
+  create(title, body, callback) {
     if (!this.isQueueFull() && Settings.get('notifications.enabled')) {
       this.notification = new Notification(title, {
         body: body,
         silent: true
       });
+
+      if (callback) {
+        this.notification.onclick = callback;
+      }
 
       this.queue.push(this.notification);
 

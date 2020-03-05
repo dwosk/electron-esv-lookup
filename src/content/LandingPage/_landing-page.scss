@@ -106,9 +106,21 @@
   margin-right: 20px;
   /* Make border transparent before hover. Helps with positioning. */
   border: 1px solid rgba(0, 0, 0, 0);
+  /* Increase space between container and border */
+  padding: 1px;
 }
 
 .verseButtonContainer:hover {
   border: 1px solid rgba(0, 0, 0, 0.8);
   border-radius: 2px;
+}
+
+.verseButtonContainer:active {
+  padding: 0px;
+  margin-right: 22px;
+}
+
+.resultButtonsLoading {
+  margin-top: 25px;
+  margin-right: 20px;
 }

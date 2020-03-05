@@ -3,11 +3,12 @@ import querystring from 'querystring';
 import Settings from './settings';
 import fs from 'fs';
 import path from 'path';
+import NotificationManager from './notification';
 import { remote } from 'electron';
 
 const downloadsDir = remote.app.getPath('downloads');
 
-export const getPassage = async (userInput) => {
+export const getPassage = async (userInput, options) => {
   let passage = '';
   /** Support for comma separated verses */
   if (userInput.indexOf(',') > -1) {
@@ -31,7 +32,7 @@ export const getPassage = async (userInput) => {
       passage += "<p><br></p>"
     }
   } else {
-    passage = await query(userInput);
+    passage = await query(userInput, options);
   }
 
   console.log(passage);
@@ -43,10 +44,14 @@ export const getPassage = async (userInput) => {
  };
 
 /** TODO: Refactor based on endpoint type */
-const query = async (input) => {
+const query = async (input, options) => {
   try {
     console.log('Getting passage:', input);
-    const endpoint = Settings.get('api.endpoint') === 0 ? 'html' : 'search'
+    let endpoint = Settings.get('api.endpoint') === 0 ? 'html' : 'search'
+    if (options && options.mp3) {
+      endpoint = 'audio';
+    }
+
     let query = {
       'q': input
     };
@@ -64,7 +69,7 @@ const query = async (input) => {
     }
     query = querystring.stringify(query);
     console.log('query: ', query)
-    const options = {
+    const httpOptions = {
       baseUrl: 'https://esv-lookup-gateway.now.sh',
       uri: `/api/passage/${endpoint}?` + query,
       method: 'GET',
@@ -73,9 +78,10 @@ const query = async (input) => {
 
     let response;
     if (endpoint === 'audio') {
-      response = await getAudio(input, options);
+      response = await getAudio(input, httpOptions);
+      return response;
     } else {
-      response = await getHtmlOrSearch(options);
+      response = await getHtmlOrSearch(httpOptions);
     }
 
     if (endpoint === 'search') {
@@ -109,10 +115,11 @@ const getAudio = (reference, options) => {
         reject();
       })
       .on('end', () => {
-        resolve();
+        resolve({
+          path: filepath
+        });
       })
       .on('response', (response) => {
-        console.log(response)
       })
       .pipe(fs.createWriteStream(filepath));
   });
@@ -125,11 +132,10 @@ const getHtmlOrSearch = (options) => {
       .on('error', (err) => {
         console.error(err);
         const { message } = err;
-        // todo: show notification
         if (/getaddrinfo ENOTFOUND/i.test(message)) {
-          console.log('Check your Internet connection.');
+          NotificationManager.create('Error!', 'Check your Internet connection.');
         } else if (/ETIMEDOUT/i.test(message)) {
-          console.log('Request timed out.');
+          NotificationManager.create('Error!', 'Request timed out.');
         }
         reject();
       })
