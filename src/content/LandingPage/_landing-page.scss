@@ -20,16 +20,16 @@
   overflow-y: auto;
 }
 
-#result {
-  margin-top: 1em;
+.result {
+  margin-top: 0.9em;
   line-height: 1.5em;
 }
 
-#result h2 {
+.result h2 {
   font-size: 1.4em;
 }
 
-#result h3 {
+.result h3 {
   font-size: 1.2em;
 }
 
@@ -83,4 +83,44 @@
     background: #0062ff;
     color: white;
     cursor: pointer;
+}
+
+.verseButton {
+  height: 22px;
+  width: 22px;
+}
+
+.verseButton:active {
+  padding: 1px;
+}
+
+/* Make delete icon slightly smaller */
+.delete {
+  width: 20px;
+  height: 20px;
+}
+
+.verseButtonContainer {
+  display: inline-block;
+  margin-top: 25px;
+  margin-right: 20px;
+  /* Make border transparent before hover. Helps with positioning. */
+  border: 1px solid rgba(0, 0, 0, 0);
+  /* Increase space between container and border */
+  padding: 1px;
+}
+
+.verseButtonContainer:hover {
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  border-radius: 2px;
+}
+
+.verseButtonContainer:active {
+  padding: 0px;
+  margin-right: 22px;
+}
+
+.resultButtonsLoading {
+  margin-top: 25px;
+  margin-right: 20px;
 }

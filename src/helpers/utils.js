@@ -1,8 +1,14 @@
-import https from 'https';
+import request from 'request';
 import querystring from 'querystring';
 import Settings from './settings';
+import fs from 'fs';
+import path from 'path';
+import NotificationManager from './notification';
+import { remote } from 'electron';
 
-export const getPassage = async (userInput) => {
+const downloadsDir = remote.app.getPath('downloads');
+
+export const getPassage = async (userInput, options) => {
   let passage = '';
   /** Support for comma separated verses */
   if (userInput.indexOf(',') > -1) {
@@ -26,7 +32,7 @@ export const getPassage = async (userInput) => {
       passage += "<p><br></p>"
     }
   } else {
-    passage = await query(userInput);
+    passage = await query(userInput, options);
   }
 
   console.log(passage);
@@ -38,10 +44,14 @@ export const getPassage = async (userInput) => {
  };
 
 /** TODO: Refactor based on endpoint type */
-const query = async (input) => {
+const query = async (input, options) => {
   try {
-    console.log('Getting passage: ', input);
-    const endpoint = Settings.get('api.endpoint') === 0 ? 'html' : 'search'
+    console.log('Getting passage:', input);
+    let endpoint = Settings.get('api.endpoint') === 0 ? 'html' : 'search'
+    if (options && options.mp3) {
+      endpoint = 'audio';
+    }
+
     let query = {
       'q': input
     };
@@ -59,13 +69,20 @@ const query = async (input) => {
     }
     query = querystring.stringify(query);
     console.log('query: ', query)
-    const options = {
-      host: 'esv-lookup-gateway.now.sh',
-      path: `/api/passage/${endpoint}?` + query,
-      method: 'GET'
+    const httpOptions = {
+      baseUrl: 'https://esv-lookup-gateway.now.sh',
+      uri: `/api/passage/${endpoint}?` + query,
+      method: 'GET',
+      timeout: 8000
     };
 
-    let response = await request(options);
+    let response;
+    if (endpoint === 'audio') {
+      response = await getAudio(input, httpOptions);
+      return response;
+    } else {
+      response = await getHtmlOrSearch(httpOptions);
+    }
 
     if (endpoint === 'search') {
       if (response.results.length === 0) {
@@ -85,31 +102,48 @@ const query = async (input) => {
   }
 }
 
-/**
- * Returns ESV API response
- */
-const request = (options) => {
+const getAudio = (reference, options) => {
   return new Promise((resolve, reject) => {
-    const req = https.request(options, (resp) => {
-      let data = '';
+    let downloadPath = path.join(downloadsDir, reference);
+    let filepath = downloadPath.split(':').join('_');
+    filepath = filepath.split(' ').join('');
+    filepath = `${filepath}.mp3`;
+    console.log(filepath);
+    request(options)
+      .on('error', (err) => {
+        console.error(err);
+        reject();
+      })
+      .on('end', () => {
+        resolve({
+          path: filepath
+        });
+      })
+      .on('response', (response) => {
+      })
+      .pipe(fs.createWriteStream(filepath));
+  });
+}
 
-      resp.on('data', (chunk) => {
+const getHtmlOrSearch = (options) => {
+  return new Promise((resolve, reject) => {
+    let data = '';
+    request(options)
+      .on('error', (err) => {
+        console.error(err);
+        const { message } = err;
+        if (/getaddrinfo ENOTFOUND/i.test(message)) {
+          NotificationManager.create('Error!', 'Check your Internet connection.');
+        } else if (/ETIMEDOUT/i.test(message)) {
+          NotificationManager.create('Error!', 'Request timed out.');
+        }
+        reject();
+      })
+      .on('data', (chunk) => {
         data += chunk;
+      })
+      .on('end', () => {
+        resolve(JSON.parse(data))
       });
-
-      // TODO: Catch network error
-      // getaddrinfo ENOTFOUND api.esv.org
-
-      resp.on('end', () => {
-        resolve(JSON.parse(data));
-      }).on('error', reject);
-    });
-
-    // If no response after 8 seconds just resolve
-    setTimeout(() => {
-      resolve();
-    }, 8000);
-
-    req.end();
   });
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 // Import parts of electron to use
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, shell } = require('electron')
 const { autoUpdater } = require('electron-updater')
 const log = require('electron-log')
 const path = require('path')
@@ -55,7 +55,7 @@ function createWindow() {
   if (dev && process.argv.indexOf('--noDevServer') === -1) {
     indexPath = url.format({
       protocol: 'http:',
-      host: 'localhost:8090',
+      host: 'localhost:8080',
       pathname: 'index.html',
       slashes: true
     })

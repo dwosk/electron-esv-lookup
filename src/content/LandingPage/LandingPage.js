@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
-import { clipboard } from 'electron';
+import { clipboard, remote } from 'electron';
 import TextInput from 'carbon-components-react/lib/components/TextInput';
 import Button from 'carbon-components-react/lib/components/Button';
 import InlineLoading from 'carbon-components-react/lib/components/InlineLoading';
 import OverflowMenu from 'carbon-components-react/lib/components/OverflowMenu';
 import OverflowMenuItem from 'carbon-components-react/lib/components/OverflowMenuItem';
 import RadioButton from 'carbon-components-react/lib/components/RadioButton';
-import { getPassage, Settings } from '../../helpers';
+import Mp320 from '@carbon/icons-react/lib/MP3/20';
+// import Delete16 from '@carbon/icons-react/lib/delete/16';
+// import Popup20 from '@carbon/icons-react/lib/popup/20';
+import { getPassage, NotificationManager, Settings } from '../../helpers';
 import autocomplete from 'autocompleter';
 import { BOOKS } from '../../helpers/books';
+
+const shell = remote.shell;
+let currentSuccessfulInput;
 
 let notificationQueue = [];
 class LandingPage extends Component {
@@ -16,6 +22,7 @@ class LandingPage extends Component {
     super();
     this.state = {
       submitting: false,
+      submittingMp3: false,
       success: false,
       apiType: Settings.get('api.endpoint')
     };
@@ -89,17 +96,19 @@ class LandingPage extends Component {
     document.getElementById('reference').value = '';
   }
 
-  getInput() {
+  getRawInput() {
     return document.getElementById('reference').value;
   }
 
   insertHtml(html) {
-    let passageEl = document.getElementById('result');
+    this.clearResult();
+    let passageEl = document.getElementById('htmlResult');
     passageEl.innerHTML = html;
   }
 
   insertSearchResults(resultsArr, input) {
-    let passageEl = document.getElementById('result');
+    this.clearResult();
+    let passageEl = document.getElementById('searchResult');
     passageEl.innerHTML = '';
     resultsArr.forEach((reference) => {
       let referenceNode = `<h3>${reference.reference}</h3>`;
@@ -109,8 +118,41 @@ class LandingPage extends Component {
     })
   }
 
+  clearResult() {
+    let htmlEl = document.getElementById('htmlResult');
+    if (htmlEl) {
+      htmlEl.innerHTML = '';
+    }
+
+    let searchEl = document.getElementById('searchResult');
+    if (searchEl) {
+      searchEl.innerHTML = '';
+    }
+  }
+
+  handleDeleteButton() {
+    this.clearResult();
+  }
+
+  async handleMp3() {
+    if (currentSuccessfulInput) {
+      this.setState({ submittingMp3: true });
+      let result = await getPassage(currentSuccessfulInput, { mp3: true });
+      console.log('mp3 downloaded:', result);
+      if (result && result.path) {
+        NotificationManager.create('MP3 ready 🎉', result.path, (event) => {
+          shell.showItemInFolder(result.path);
+        });
+      } else {
+        NotificationManager.create('MP3 failed to download 😢', 'File size might be too big.');
+      }
+
+      this.setState({ submittingMp3: false});
+    }
+  }
+
   async handleSubmit() {
-    let input = await this.getInput();
+    let input = await this.getRawInput();
     if (!input) {
       return;
     }
@@ -119,8 +161,10 @@ class LandingPage extends Component {
       submitting: true
     });
 
+    // todo: parse first and put some logic in component
     let result = await getPassage(input);
     if (result) {
+      currentSuccessfulInput = input;
       /** Search API returns array and is not HTML */
       if (result instanceof Array) {
         this.insertSearchResults(result, input);
@@ -129,7 +173,7 @@ class LandingPage extends Component {
         if (Settings.get('copy.auto')) {
           /** Add passage to clipboard */
           clipboard.writeHTML(result);
-          this.sendNotification(input);
+          NotificationManager.create('Ready to Go!', `Copied ${input}`)
         }
       }
 
@@ -140,36 +184,26 @@ class LandingPage extends Component {
     setTimeout(() => this.setState({ success: false, submitting: false }), 1500);
   }
 
-  sendNotification(body) {
-    if (!Settings.get('notifications.enabled')) {
-      return;
-    }
-
-    /** Only show one notification at a time */
-    if (notificationQueue.length === 0) {
-      let myNotification = new Notification('Ready to Go!', {
-        body: `Copied: ${body}`,
-        silent: true
-      })
-      notificationQueue.push(myNotification);
-
-      /** Dismiss notification after 3s */
-      /** Windows - app must be pinned to Start */
-      new Promise(function(resolve) {
-        setTimeout(() => {
-          myNotification.close()
-          notificationQueue.pop();
-          resolve()
-        }, 4000);
-      });
-    }
-  }
-
   render() {
-    const { submitting, success, apiType } = this.state;
+    const { submitting, success, apiType, submittingMp3 } = this.state;
     const handleSubmit = this.handleSubmit.bind(this);
     let props = {
       [Settings.get('api.endpoint') === 0 ? 'checked' : 'foo']: true,
+    }
+    let resultEl = document.getElementById('htmlResult');
+    let resultButtons;
+    if (resultEl && resultEl.innerHTML !== "") {
+      // <div className="verseButtonContainer">
+      //   <Popup20 className="verseButton"/>
+      // </div>
+      // <div className="verseButtonContainer" onClick={() => this.handleDeleteButton()}>
+      //   <Delete16 className="verseButton delete"/>
+      // </div>
+      resultButtons = <>
+                        <div className="verseButtonContainer" onClick={() => {this.handleMp3()}}>
+                          <Mp320 className="verseButton"/>
+                        </div>
+                      </>
     }
 
     return (
@@ -215,7 +249,14 @@ class LandingPage extends Component {
           <Button id="submitBtn" size="small" onClick={handleSubmit}>Enter</Button>
         )}
         </div>
-        <article id="result"></article>
+        {/* {resultButtons} */}
+        { submittingMp3 ? (
+          <InlineLoading className='resultButtonsLoading'/>
+        ) : (
+          resultButtons
+        )}
+        <article id="htmlResult" className="result"></article>
+        <article id="searchResult" classNamet="result"></article>
       </>
     );
   }
