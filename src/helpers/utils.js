@@ -104,11 +104,11 @@ const query = async (input, options) => {
 
 const getAudio = (reference, options) => {
   return new Promise((resolve, reject) => {
-    let downloadPath = path.join(downloadsDir, reference);
-    let filepath = downloadPath.split(':').join('_');
-    filepath = filepath.split(' ').join('');
-    filepath = `${filepath}.mp3`;
-    console.log(filepath);
+    let filename = reference.split(':').join('_');
+    filename = filename.split(' ').join('');
+    filename = filename + '.mp3';
+    let absolutePath = path.join(downloadsDir, filename);
+    console.log('Downloading to:', absolutePath);
     request(options)
       .on('error', (err) => {
         console.error(err);
@@ -116,12 +116,12 @@ const getAudio = (reference, options) => {
       })
       .on('end', () => {
         resolve({
-          path: filepath
+          path: absolutePath
         });
       })
       .on('response', (response) => {
       })
-      .pipe(fs.createWriteStream(filepath));
+      .pipe(fs.createWriteStream(absolutePath));
   });
 }
 
