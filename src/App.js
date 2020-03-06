@@ -16,7 +16,6 @@ class App extends Component {
         <Content id="main-content">
           <Switch>
             <Route exact path="/" component={LandingPage} />
-            <Route path="/recent" component={RecentPage} />
           </Switch>
         </Content>
       </>

@@ -64,7 +64,7 @@ const LookupHeader = () => {
         Lookup
       </HeaderName>
       <HeaderNavigation aria-label="Carbon Tutorial">
-        <HeaderMenuItem element={Link} to="/recent">Recent</HeaderMenuItem>
+        {/*<HeaderMenuItem element={Link} to="/recent">Recent</HeaderMenuItem>*/}
       </HeaderNavigation>
       <HeaderGlobalBar className="headerButtons">
         <NotificationAction />
