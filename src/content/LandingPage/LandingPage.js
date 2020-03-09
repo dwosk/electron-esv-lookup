@@ -6,6 +6,8 @@ import InlineLoading from 'carbon-components-react/lib/components/InlineLoading'
 import OverflowMenu from 'carbon-components-react/lib/components/OverflowMenu';
 import OverflowMenuItem from 'carbon-components-react/lib/components/OverflowMenuItem';
 import RadioButton from 'carbon-components-react/lib/components/RadioButton';
+import Copy16 from 'carbon-components-react/lib/components/CopyButton';
+// import Copy16 from '@carbon/icons-react/lib/Copy/16';
 import Mp320 from '@carbon/icons-react/lib/MP3/20';
 // import Delete16 from '@carbon/icons-react/lib/delete/16';
 // import Popup20 from '@carbon/icons-react/lib/popup/20';
@@ -130,6 +132,15 @@ class LandingPage extends Component {
     }
   }
 
+  copyHtmlResults() {
+    let htmlEl = document.getElementById('htmlResult');
+    let result = htmlEl.innerHTML;
+
+    if (result) {
+      clipboard.writeHTML(result);
+    }
+  }
+
   handleDeleteButton() {
     this.clearResult();
   }
@@ -203,6 +214,9 @@ class LandingPage extends Component {
                         <div className="verseButtonContainer" onClick={() => {this.handleMp3()}}>
                           <Mp320 className="verseButton"/>
                         </div>
+                        <div className="verseButtonContainer" onClick={() => {this.copyHtmlResults()}}>
+                          <Copy16 className="verseButton"/>
+                        </div>
                       </>
     }
 
@@ -211,7 +225,7 @@ class LandingPage extends Component {
         <div id="inputRow">
         <TextInput id="reference" labelText="Reference" placeholder="Ex: John 1:12,15-17"/>
         <OverflowMenu>
-          <h1 id="overflowTitle">Lookup Type</h1>
+          <p id="overflowTitle">Lookup Type</p>
           <RadioButton
             value="html"
             id="html-option"
@@ -256,7 +270,7 @@ class LandingPage extends Component {
           resultButtons
         )}
         <article id="htmlResult" className="result"></article>
-        <article id="searchResult" classNamet="result"></article>
+        <article id="searchResult" className="result"></article>
       </>
     );
   }

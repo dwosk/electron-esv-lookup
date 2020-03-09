@@ -90,10 +90,6 @@
   width: 22px;
 }
 
-.verseButton:active {
-  padding: 1px;
-}
-
 /* Make delete icon slightly smaller */
 .delete {
   width: 20px;
@@ -108,17 +104,20 @@
   border: 1px solid rgba(0, 0, 0, 0);
   /* Increase space between container and border */
   padding: 1px;
+
+  .bx--copy-btn {
+    background-color: white;
+  }
+
+  .bx--copy-btn:focus {
+    outline-color: white;
+  }
 }
 
 .verseButtonContainer:hover {
   border: 1px solid rgba(0, 0, 0, 0.8);
   border-radius: 2px;
   cursor: pointer;
-}
-
-.verseButtonContainer:active {
-  padding: 0px;
-  margin-right: 22px;
 }
 
 .resultButtonsLoading {
