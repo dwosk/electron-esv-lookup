@@ -46,6 +46,12 @@ class LandingPage extends Component {
       }
     });
 
+    // By default place focus on the input element
+    let inputEl = document.getElementById('reference');
+    if (inputEl) {
+      inputEl.focus();
+    }
+
     const allowedChars = new RegExp(/^[a-zA-Z0-9\s]+$/);
     function charsAllowed(value) {
       return allowedChars.test(value);
