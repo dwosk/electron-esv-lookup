@@ -193,7 +193,7 @@ class LandingPage extends Component {
         if (Settings.get('copy.auto')) {
           /** Add passage to clipboard */
           clipboard.writeHTML(result);
-          NotificationManager.create('Ready to Go!', `Copied ${input}`)
+          NotificationManager.create('Ready to Go!', `Copied ${input}`);
         }
       }
 
@@ -223,7 +223,10 @@ class LandingPage extends Component {
                         <div className="verseButtonContainer" onClick={() => {this.handleMp3()}}>
                           <Tooltip
                             id="mp3tooltip"
-                            triggerText={ <Mp320 className="verseButton" onClick={() => {this.handleMp3()}}/>}
+                            triggerText=
+                              {
+                                <Mp320 className="verseButton" onClick={() => {this.handleMp3()}}/>
+                              }
                             open={this.state.showMp3Tooltip}
                             showIcon={false}
                           >
