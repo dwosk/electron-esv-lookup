@@ -90,10 +90,6 @@
   width: 22px;
 }
 
-.verseButton:active {
-  padding: 1px;
-}
-
 /* Make delete icon slightly smaller */
 .delete {
   width: 20px;
@@ -108,6 +104,14 @@
   border: 1px solid rgba(0, 0, 0, 0);
   /* Increase space between container and border */
   padding: 1px;
+
+  .bx--copy-btn {
+    background-color: white;
+  }
+
+  .bx--copy-btn:focus {
+    outline-color: white;
+  }
 }
 
 .verseButtonContainer:hover {
@@ -116,12 +120,16 @@
   cursor: pointer;
 }
 
-.verseButtonContainer:active {
-  padding: 0px;
-  margin-right: 22px;
-}
-
 .resultButtonsLoading {
   margin-top: 25px;
   margin-right: 20px;
+}
+
+#mp3tooltip {
+  min-width: 0rem;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 6px;
+  padding-bottom: 4px;
+  margin-top: 10px !important;
 }

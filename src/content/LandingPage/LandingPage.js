@@ -6,6 +6,8 @@ import InlineLoading from 'carbon-components-react/lib/components/InlineLoading'
 import OverflowMenu from 'carbon-components-react/lib/components/OverflowMenu';
 import OverflowMenuItem from 'carbon-components-react/lib/components/OverflowMenuItem';
 import RadioButton from 'carbon-components-react/lib/components/RadioButton';
+import CopyButton from 'carbon-components-react/lib/components/CopyButton';
+import Tooltip from 'carbon-components-react/lib/components/Tooltip';
 import Mp320 from '@carbon/icons-react/lib/MP3/20';
 // import Delete16 from '@carbon/icons-react/lib/delete/16';
 // import Popup20 from '@carbon/icons-react/lib/popup/20';
@@ -23,6 +25,7 @@ class LandingPage extends Component {
     this.state = {
       submitting: false,
       submittingMp3: false,
+      showMp3Tooltip: false,
       success: false,
       apiType: Settings.get('api.endpoint')
     };
@@ -43,6 +46,12 @@ class LandingPage extends Component {
         }
       }
     });
+
+    // By default place focus on the input element
+    let inputEl = document.getElementById('reference');
+    if (inputEl) {
+      inputEl.focus();
+    }
 
     const allowedChars = new RegExp(/^[a-zA-Z0-9\s]+$/);
     function charsAllowed(value) {
@@ -130,6 +139,15 @@ class LandingPage extends Component {
     }
   }
 
+  copyHtmlResults() {
+    let htmlEl = document.getElementById('htmlResult');
+    let result = htmlEl.innerHTML;
+
+    if (result) {
+      clipboard.writeHTML(result);
+    }
+  }
+
   handleDeleteButton() {
     this.clearResult();
   }
@@ -147,7 +165,9 @@ class LandingPage extends Component {
         NotificationManager.create('MP3 failed to download 😢', 'File size might be too big.');
       }
 
-      this.setState({ submittingMp3: false});
+      this.setState({ submittingMp3: false, showMp3Tooltip: true });
+      /** Reset state after an additional 1.5 seconds  */
+      setTimeout(() => this.setState({ showMp3Tooltip: false }), 1500);
     }
   }
 
@@ -173,7 +193,7 @@ class LandingPage extends Component {
         if (Settings.get('copy.auto')) {
           /** Add passage to clipboard */
           clipboard.writeHTML(result);
-          NotificationManager.create('Ready to Go!', `Copied ${input}`)
+          NotificationManager.create('Ready to Go!', `Copied ${input}`);
         }
       }
 
@@ -201,7 +221,20 @@ class LandingPage extends Component {
       // </div>
       resultButtons = <>
                         <div className="verseButtonContainer" onClick={() => {this.handleMp3()}}>
-                          <Mp320 className="verseButton"/>
+                          <Tooltip
+                            id="mp3tooltip"
+                            triggerText=
+                              {
+                                <Mp320 className="verseButton" onClick={() => {this.handleMp3()}}/>
+                              }
+                            open={this.state.showMp3Tooltip}
+                            showIcon={false}
+                          >
+                            Done!
+                          </Tooltip>
+                        </div>
+                        <div className="verseButtonContainer" onClick={() => {this.copyHtmlResults()}}>
+                          <CopyButton className="verseButton"/>
                         </div>
                       </>
     }
@@ -211,7 +244,7 @@ class LandingPage extends Component {
         <div id="inputRow">
         <TextInput id="reference" labelText="Reference" placeholder="Ex: John 1:12,15-17"/>
         <OverflowMenu>
-          <h1 id="overflowTitle">Lookup Type</h1>
+          <p id="overflowTitle">Lookup Type</p>
           <RadioButton
             value="html"
             id="html-option"
@@ -256,7 +289,7 @@ class LandingPage extends Component {
           resultButtons
         )}
         <article id="htmlResult" className="result"></article>
-        <article id="searchResult" classNamet="result"></article>
+        <article id="searchResult" className="result"></article>
       </>
     );
   }

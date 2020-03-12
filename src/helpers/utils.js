@@ -106,6 +106,7 @@ const getAudio = (reference, options) => {
   return new Promise((resolve, reject) => {
     let filename = reference.split(':').join('_');
     filename = filename.split(' ').join('');
+    filename = filename.toLowerCase();
     filename = filename + '.mp3';
     let absolutePath = path.join(downloadsDir, filename);
     console.log('Downloading to:', absolutePath);
